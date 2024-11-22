@@ -1,0 +1,91 @@
+import java.util.Scanner;
+
+
+
+ public class PRLDST10336401Part1POE {
+    public static void main(String[] args) {
+        // Get input from user for registration
+        try (Scanner scanner = new Scanner(System.in)) {
+            
+            
+            
+            // Get input from user for registration
+            System.out.print("Don: "); //Enter user name
+            String username = scanner.nextLine();
+            System.out.print("November13: "); // Enter Password
+            String password = scanner.nextLine();
+            
+            
+            // Create a Login object
+            Login login = new Login();
+            
+            
+            
+            // Validate and register user
+            String registrationMessage = login.registerUser(username, password);
+            System.out.println(registrationMessage);
+            
+            
+            
+            // If registration is successful, prompt for login
+            if (registrationMessage.contains("successfully")) {
+                System.out.print("Don: ");// Login username
+                String loginUsername = scanner.nextLine();
+                
+                System.out.print("November13: "); // Login password
+                String loginPassword = scanner.nextLine();
+                
+                // Validate login credentials
+                boolean loginSuccess = login.loginUser(loginUsername, loginPassword);
+                System.out.println(login.returnLoginStatus(loginSuccess));
+            }
+            // Closing the scanner
+        }
+    }
+}
+
+/**
+ * Login class to handle user registration and login functionalities.
+ */
+class Login {
+    private String registeredUsername;
+    private String registeredPassword;
+
+    // Method to validate username
+    public boolean checkUserName(String username) {
+        return username.contains("_") && username.length() <= 5;
+    }
+
+    // Method to validate password complexity
+    public boolean checkPasswordComplexity(String password) {
+        return password.length() >= 8 &&
+                password.matches(".*[A-Z].*") &&  // Contains capital letter
+                password.matches(".*\\d.*") &&    // Contains a number
+                password.matches(".*[!@#$%^&*].*"); // Contains a special character
+    }
+
+    // Method to register user
+    public String registerUser(String username, String password) {
+        if (!checkUserName(username)) {
+            return "Username is not correctly formatted, please ensure that your username contains an underscore and is no more than 5 characters in length.";
+        }
+        if (!checkPasswordComplexity(password)) {
+            return "Password is not correctly formatted, please ensure that the password contains at least 8 characters, a capital letter, a number, and a special character.";
+        }
+
+        // Store registered credentials
+        this.registeredUsername = username;
+        this.registeredPassword = password;
+        return "User registered successfully.";
+    }
+
+    // Method to login user
+    public boolean loginUser(String username, String password) {
+        return username.equals(registeredUsername) && password.equals(registeredPassword);
+    }
+
+    // Method to return login status message
+    public String returnLoginStatus(boolean success) {
+        return success ? "Login successful." : "Login failed.";
+    }
+}
